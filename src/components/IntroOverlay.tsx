@@ -266,13 +266,7 @@ export default function IntroOverlay() {
           0,
         ) / scale
 
-      const fits =
-        inked + (wordEls.length - 1) * space <= width + 0.5
-
-      title.style.columnGap =
-        `${fits
-          ? Math.max(0, (width - inked) / (wordEls.length - 1))
-          : space}px`
+title.style.columnGap = `${space}px`
 
       const gates = wordEls.map((el, k) => ({
         inner: el.querySelector<HTMLElement>('.boot__word-in'),
