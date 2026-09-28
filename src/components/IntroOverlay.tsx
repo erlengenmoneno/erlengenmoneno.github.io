@@ -1,23 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 
 /**
- * IntroOverlay - "the workflow writes the line".
+ * IntroOverlay
  *
- * Portfolio preloader:
+ * Portfolio workflow:
+ * Design → Mockup → List → Sell
  *
- *   ✦ Design  →  T-Shirt Mockup  →  Tag/List  →  Store/Sell
- *
- * The workflow progresses from left to right while the portfolio headline
- * "One Design. Endless Sales." is revealed.
- *
- *   Ignition  0.00-0.30  nodes and cables draw in
- *   Run       0.30-1.90  execution streams through the creative workflow
- *   Lock      1.90-2.25  final node succeeds and product is launched
- *   Handoff   2.25-3.15  headline flies into the real homepage title
- *
- * No animation library: Web Animations API for the keyframed parts and one rAF
- * loop for the progress-driven parts. Transform, opacity and stroke-dashoffset
- * only - nothing here touches layout.
+ * Headline:
+ * One Design. Endless Sales.
  */
 
 const WORDS = 'One Design. Endless Sales.'.split(' ')
@@ -27,7 +17,6 @@ const RUN_MS = 1600
 const LOCK_MS = 350
 const FLY_MS = 900
 
-/** Design units for the canvas, before the shared scale is applied. */
 const NODE = 40
 const CANVAS_H = 96
 const NODE_Y = 34
@@ -37,14 +26,13 @@ const EASE_SPRING = 'cubic-bezier(0.34, 1.56, 0.64, 1)'
 const EASE_CAMERA = 'cubic-bezier(0.76, 0, 0.24, 1)'
 
 const easeInOut = (t: number) =>
-  t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2
+  t < 0.5
+    ? 4 * t * t * t
+    : 1 - Math.pow(-2 * t + 2, 3) / 2
 
 /**
  * Creative workflow:
  * Sparkle → T-Shirt → Tag → Store
- *
- * Icons use Tabler-style 24-unit SVG paths so they keep the same
- * visual style as the original template.
  */
 const STEPS = [
   {
@@ -74,16 +62,22 @@ const shouldRun =
   !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
   window.location.pathname === '/'
 
-// Two classes, because the page and the headline are handed back at different
-// moments: `is-intro` holds the whole page, `is-intro-head` holds only the real
-// headline, which must stay hidden until the flying clone has landed on it.
-if (shouldRun) document.documentElement.classList.add('is-intro', 'is-intro-head')
+if (shouldRun) {
+  document.documentElement.classList.add(
+    'is-intro',
+    'is-intro-head',
+  )
+}
 
-const release = () => document.documentElement.classList.remove('is-intro')
-const releaseHead = () => document.documentElement.classList.remove('is-intro-head')
+const release = () =>
+  document.documentElement.classList.remove('is-intro')
+
+const releaseHead = () =>
+  document.documentElement.classList.remove('is-intro-head')
 
 export default function IntroOverlay() {
   const [gone, setGone] = useState(!shouldRun)
+
   const titleRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLDivElement>(null)
   const svgRef = useRef<SVGSVGElement>(null)
@@ -98,9 +92,10 @@ export default function IntroOverlay() {
       return
     }
 
-    // Re-assert here, not just at module load: StrictMode mounts, unmounts and
-    // remounts in dev, and the first unmount's cleanup releases the class.
-    document.documentElement.classList.add('is-intro', 'is-intro-head')
+    document.documentElement.classList.add(
+      'is-intro',
+      'is-intro-head',
+    )
 
     const title = titleRef.current
     const canvas = canvasRef.current
@@ -109,7 +104,14 @@ export default function IntroOverlay() {
     const dotCore = dotCoreRef.current
     const status = statusRef.current
 
-    if (!title || !canvas || !svg || !dot || !dotCore || !status) {
+    if (
+      !title ||
+      !canvas ||
+      !svg ||
+      !dot ||
+      !dotCore ||
+      !status
+    ) {
       release()
       releaseHead()
       setGone(true)
@@ -118,84 +120,181 @@ export default function IntroOverlay() {
 
     let cancelled = false
     let raf = 0
+
     const timers: number[] = []
     const anims: Animation[] = []
 
     const wait = (ms: number) =>
-      new Promise<void>((res) => timers.push(window.setTimeout(res, ms)))
+      new Promise<void>((res) =>
+        timers.push(window.setTimeout(res, ms)),
+      )
 
     const play = (
       el: Element,
       frames: Keyframe[],
       opts: KeyframeAnimationOptions,
     ) => {
-      const a = el.animate(frames, { fill: 'both', ...opts })
+      const a = el.animate(frames, {
+        fill: 'both',
+        ...opts,
+      })
+
       anims.push(a)
+
       return a
     }
 
     const run = async () => {
-      if (document.fonts?.ready) await document.fonts.ready
+      if (document.fonts?.ready) {
+        await document.fonts.ready
+      }
+
       if (cancelled) return
 
-      // Phones get the same sequence at two-thirds speed.
-      const k = window.innerWidth < 1100 ? 0.62 : 1
+      const k =
+        window.innerWidth < 1100
+          ? 0.62
+          : 1
 
       const IGNITE = IGNITE_MS * k
       const RUN = RUN_MS * k
       const LOCK = LOCK_MS * k
       const FLY = FLY_MS * k
 
-      const target = document.querySelector<HTMLElement>('.home__title')
-      const t = target?.getBoundingClientRect()
+      const target =
+        document.querySelector<HTMLElement>(
+          '.home__title',
+        )
 
-      // Match the landing width exactly, so scale 1 IS the final layout.
-      const width = t?.width ?? Math.min(760, window.innerWidth * 0.86)
+      const t =
+        target?.getBoundingClientRect()
+
+      const width =
+        t?.width ??
+        Math.min(
+          760,
+          window.innerWidth * 0.86,
+        )
 
       title.style.width = `${width}px`
       canvas.style.width = `${width}px`
       canvas.style.height = `${CANVAS_H}px`
 
-      const height = t?.height ?? title.offsetHeight
-      const scale = Math.min((window.innerWidth * 0.86) / width, 2.6)
-      const w = width * scale
-      const h = height * scale
-      const sx = (window.innerWidth - w) / 2
+      const height =
+        t?.height ??
+        title.offsetHeight
+
+      const scale =
+        Math.min(
+          (window.innerWidth * 0.86) /
+            width,
+          2.6,
+        )
+
+      const w =
+        width * scale
+
+      const h =
+        height * scale
+
+      const sx =
+        (window.innerWidth - w) / 2
+
       const sy =
         (window.innerHeight - h) / 2 -
-        Math.min(96, window.innerHeight * 0.09)
+        Math.min(
+          96,
+          window.innerHeight * 0.09,
+        )
 
-      const restTransform = `translate(${sx}px, ${sy}px) scale(${scale})`
+      const restTransform =
+        `translate(${sx}px, ${sy}px) scale(${scale})`
+
       const canvasTransform =
-        `translate(${sx}px, ${sy + h + 44 * scale}px) scale(${scale})`
+        `translate(${sx}px, ${
+          sy + h + 44 * scale
+        }px) scale(${scale})`
 
-      title.style.transform = restTransform
-      canvas.style.transform = canvasTransform
+      title.style.transform =
+        restTransform
+
+      canvas.style.transform =
+        canvasTransform
+
       title.style.opacity = '1'
       canvas.style.opacity = '1'
 
-      // ---- Lay the nodes out on the design canvas ----
-      const nodeEls = Array.from(
-        canvas.querySelectorAll<HTMLElement>('.boot__n'),
+      /**
+       * IMPORTANT:
+       * Natural spacing between headline words.
+       *
+       * The original template stretched the
+       * words across the available width.
+       * We intentionally use a normal em gap.
+       */
+      title.style.columnGap = '0.24em'
+
+      // --------------------------------
+      // Workflow nodes
+      // --------------------------------
+
+      const nodeEls =
+        Array.from(
+          canvas.querySelectorAll<HTMLElement>(
+            '.boot__n',
+          ),
+        )
+
+      const n =
+        nodeEls.length
+
+      const xs =
+        nodeEls.map(
+          (_, index) =>
+            NODE / 2 +
+            (index *
+              (width - NODE)) /
+              (n - 1),
+        )
+
+      nodeEls.forEach(
+        (el, index) => {
+          el.style.left =
+            `${
+              xs[index] -
+              NODE / 2
+            }px`
+
+          el.style.top =
+            `${
+              NODE_Y -
+              NODE / 2
+            }px`
+        },
       )
 
-      const n = nodeEls.length
+      // --------------------------------
+      // Workflow cables
+      // --------------------------------
 
-      const xs = nodeEls.map(
-        (_, k) => NODE / 2 + (k * (width - NODE)) / (n - 1),
+      svg.setAttribute(
+        'viewBox',
+        `0 0 ${width} ${CANVAS_H}`,
       )
 
-      nodeEls.forEach((el, k) => {
-        el.style.left = `${xs[k] - NODE / 2}px`
-        el.style.top = `${NODE_Y - NODE / 2}px`
-      })
+      svg.setAttribute(
+        'width',
+        String(width),
+      )
 
-      // ---- Create workflow cables ----
-      svg.setAttribute('viewBox', `0 0 ${width} ${CANVAS_H}`)
-      svg.setAttribute('width', String(width))
-      svg.setAttribute('height', String(CANVAS_H))
+      svg.setAttribute(
+        'height',
+        String(CANVAS_H),
+      )
 
-      const NS = 'http://www.w3.org/2000/svg'
+      const NS =
+        'http://www.w3.org/2000/svg'
+
       svg.replaceChildren()
 
       const cables: {
@@ -205,29 +304,75 @@ export default function IntroOverlay() {
         to: number
       }[] = []
 
-      for (let k = 0; k < n - 1; k++) {
-        const x1 = xs[k] + NODE / 2
-        const x2 = xs[k + 1] - NODE / 2
-        const cx = (x2 - x1) * 0.5
+      for (
+        let index = 0;
+        index < n - 1;
+        index++
+      ) {
+        const x1 =
+          xs[index] +
+          NODE / 2
+
+        const x2 =
+          xs[index + 1] -
+          NODE / 2
+
+        const cx =
+          (x2 - x1) * 0.5
 
         const d =
           `M ${x1} ${NODE_Y} ` +
-          `C ${x1 + cx} ${NODE_Y}, ${x2 - cx} ${NODE_Y}, ${x2} ${NODE_Y}`
+          `C ${
+            x1 + cx
+          } ${NODE_Y}, ${
+            x2 - cx
+          } ${NODE_Y}, ${x2} ${NODE_Y}`
 
-        const base = document.createElementNS(NS, 'path')
-        base.setAttribute('d', d)
-        base.setAttribute('class', 'boot__cable')
+        const base =
+          document.createElementNS(
+            NS,
+            'path',
+          )
 
-        const live = document.createElementNS(NS, 'path')
-        live.setAttribute('d', d)
-        live.setAttribute('class', 'boot__cable boot__cable--live')
+        base.setAttribute(
+          'd',
+          d,
+        )
 
-        svg.append(base, live)
+        base.setAttribute(
+          'class',
+          'boot__cable',
+        )
 
-        const len = live.getTotalLength()
+        const live =
+          document.createElementNS(
+            NS,
+            'path',
+          )
 
-        live.style.strokeDasharray = `${len}`
-        live.style.strokeDashoffset = `${len}`
+        live.setAttribute(
+          'd',
+          d,
+        )
+
+        live.setAttribute(
+          'class',
+          'boot__cable boot__cable--live',
+        )
+
+        svg.append(
+          base,
+          live,
+        )
+
+        const len =
+          live.getTotalLength()
+
+        live.style.strokeDasharray =
+          `${len}`
+
+        live.style.strokeDashoffset =
+          `${len}`
 
         cables.push({
           live,
@@ -238,80 +383,102 @@ export default function IntroOverlay() {
 
         play(
           base,
-          [{ opacity: 0 }, { opacity: 1 }],
+          [
+            {
+              opacity: 0,
+            },
+            {
+              opacity: 1,
+            },
+          ],
           {
             duration: 420,
-            delay: 90 + k * 70,
-            easing: EASE_OUT,
+            delay:
+              90 +
+              index * 70,
+            easing:
+              EASE_OUT,
           },
         )
       }
 
-      // ---- Prepare headline words ----
-      const wordEls = Array.from(
-        title.querySelectorAll<HTMLElement>('.boot__word'),
-      )
+      // --------------------------------
+      // Headline reveal
+      // --------------------------------
 
-      const probe = document.createElement('span')
-      probe.className = 'boot__word'
-      probe.textContent = ' '
-      title.append(probe)
-
-      const space = probe.getBoundingClientRect().width / scale
-      probe.remove()
-
-const inked =
-  wordEls.reduce(
-    (sum, el) => sum + el.getBoundingClientRect().width,
-    0,
-  ) / scale
-
-title.style.columnGap = `${space}px`
-
-const gates = wordEls.map((el, k) => ({
-  inner: el.querySelector<HTMLElement>('.boot__word-in'),
-  at: k / wordEls.length,
-  done: false,
-}))
-
-      // ---- Ignition ----
-      nodeEls.forEach((el, k) => {
-        play(
-          el,
-          [
-            {
-              opacity: 0,
-              transform: 'translateY(8px) scale(0.86)',
-            },
-            {
-              opacity: 1,
-              transform: 'translateY(0) scale(1)',
-            },
-          ],
-          {
-            duration: 520,
-            delay: k * 70,
-            easing: EASE_SPRING,
-          },
+      const wordEls =
+        Array.from(
+          title.querySelectorAll<HTMLElement>(
+            '.boot__word',
+          ),
         )
-      })
+
+      const gates =
+        wordEls.map(
+          (el, index) => ({
+            inner:
+              el.querySelector<HTMLElement>(
+                '.boot__word-in',
+              ),
+
+            at:
+              index /
+              wordEls.length,
+
+            done: false,
+          }),
+        )
+
+      // --------------------------------
+      // Ignition
+      // --------------------------------
+
+      nodeEls.forEach(
+        (el, index) => {
+          play(
+            el,
+            [
+              {
+                opacity: 0,
+                transform:
+                  'translateY(8px) scale(0.86)',
+              },
+              {
+                opacity: 1,
+                transform:
+                  'translateY(0) scale(1)',
+              },
+            ],
+            {
+              duration: 520,
+              delay:
+                index * 70,
+              easing:
+                EASE_SPRING,
+            },
+          )
+        },
+      )
 
       play(
         dotCore,
         [
           {
             opacity: 0,
-            transform: 'scale(0.2)',
+            transform:
+              'scale(0.2)',
           },
           {
             opacity: 1,
-            transform: 'scale(1)',
+            transform:
+              'scale(1)',
           },
         ],
         {
           duration: 320,
           delay: 200,
-          easing: EASE_SPRING,
+          easing:
+            EASE_SPRING,
         },
       )
 
@@ -320,17 +487,20 @@ const gates = wordEls.map((el, k) => ({
         [
           {
             opacity: 0,
-            transform: 'translateY(4px)',
+            transform:
+              'translateY(4px)',
           },
           {
             opacity: 1,
-            transform: 'none',
+            transform:
+              'none',
           },
         ],
         {
           duration: 420,
           delay: 160,
-          easing: EASE_OUT,
+          easing:
+            EASE_OUT,
         },
       )
 
@@ -338,152 +508,237 @@ const gates = wordEls.map((el, k) => ({
 
       if (cancelled) return
 
-      // ---- Creative workflow run ----
+      // --------------------------------
+      // Workflow run
+      // --------------------------------
+
       const x0 = xs[0]
-      const x1 = xs[n - 1]
+      const x1 =
+        xs[n - 1]
 
-      const nodeAt = xs.map(
-        (x) => (x - x0) / (x1 - x0),
-      )
+      const nodeAt =
+        xs.map(
+          (x) =>
+            (x - x0) /
+            (x1 - x0),
+        )
 
-      const nodeDone = nodeEls.map(() => false)
+      const nodeDone =
+        nodeEls.map(
+          () => false,
+        )
 
-      const succeed = (k: number) => {
-        nodeDone[k] = true
+      const succeed =
+        (index: number) => {
+          nodeDone[index] =
+            true
 
-        const el = nodeEls[k]
+          const el =
+            nodeEls[index]
 
-        el.classList.add('is-done')
-
-        const badge =
-          el.querySelector<HTMLElement>('.boot__n-check')
-
-        if (badge) {
-          play(
-            badge,
-            [
-              {
-                opacity: 0,
-                transform: 'scale(0.3)',
-              },
-              {
-                opacity: 1,
-                transform: 'scale(1)',
-              },
-            ],
-            {
-              duration: 460,
-              easing: EASE_SPRING,
-            },
+          el.classList.add(
+            'is-done',
           )
-        }
 
-        const card =
-          el.querySelector<HTMLElement>('.boot__n-card')
+          const badge =
+            el.querySelector<HTMLElement>(
+              '.boot__n-check',
+            )
 
-        if (card) {
-          play(
-            card,
-            [
-              { transform: 'scale(1)' },
-              { transform: 'scale(1.08)' },
-              { transform: 'scale(1)' },
-            ],
-            {
-              duration: 420,
-              easing: EASE_OUT,
-            },
-          )
+          if (badge) {
+            play(
+              badge,
+              [
+                {
+                  opacity: 0,
+                  transform:
+                    'scale(0.3)',
+                },
+                {
+                  opacity: 1,
+                  transform:
+                    'scale(1)',
+                },
+              ],
+              {
+                duration: 460,
+                easing:
+                  EASE_SPRING,
+              },
+            )
+          }
+
+          const card =
+            el.querySelector<HTMLElement>(
+              '.boot__n-card',
+            )
+
+          if (card) {
+            play(
+              card,
+              [
+                {
+                  transform:
+                    'scale(1)',
+                },
+                {
+                  transform:
+                    'scale(1.08)',
+                },
+                {
+                  transform:
+                    'scale(1)',
+                },
+              ],
+              {
+                duration: 420,
+                easing:
+                  EASE_OUT,
+              },
+            )
+          }
         }
-      }
 
       succeed(0)
 
-      await new Promise<void>((res) => {
-        const start = performance.now()
+      await new Promise<void>(
+        (res) => {
+          const start =
+            performance.now()
 
-        const step = (now: number) => {
-          if (cancelled) return res()
+          const step =
+            (now: number) => {
+              if (cancelled) {
+                res()
+                return
+              }
 
-          const raw = Math.min(
-            1,
-            (now - start) / RUN,
-          )
+              const raw =
+                Math.min(
+                  1,
+                  (now -
+                    start) /
+                    RUN,
+                )
 
-          const p = easeInOut(raw)
-          const x = x0 + p * (x1 - x0)
+              const p =
+                easeInOut(raw)
 
-          dot.style.transform =
-            `translate3d(${x}px, ${NODE_Y}px, 0)`
+              const x =
+                x0 +
+                p *
+                  (x1 - x0)
 
-          for (const c of cables) {
-            const f = Math.min(
-              1,
-              Math.max(
-                0,
-                (x - c.from) / (c.to - c.from),
-              ),
+              dot.style.transform =
+                `translate3d(${x}px, ${NODE_Y}px, 0)`
+
+              for (
+                const c of cables
+              ) {
+                const f =
+                  Math.min(
+                    1,
+                    Math.max(
+                      0,
+                      (x -
+                        c.from) /
+                        (c.to -
+                          c.from),
+                    ),
+                  )
+
+                c.live.style.strokeDashoffset =
+                  `${
+                    c.len *
+                    (1 - f)
+                  }`
+              }
+
+              for (
+                let index = 1;
+                index <
+                n - 1;
+                index++
+              ) {
+                if (
+                  !nodeDone[
+                    index
+                  ] &&
+                  p >=
+                    nodeAt[
+                      index
+                    ]
+                ) {
+                  succeed(
+                    index,
+                  )
+                }
+              }
+
+              for (
+                const g of gates
+              ) {
+                if (
+                  !g.done &&
+                  p >= g.at &&
+                  g.inner
+                ) {
+                  g.done =
+                    true
+
+                  play(
+                    g.inner,
+                    [
+                      {
+                        transform:
+                          'translateY(132%)',
+                      },
+                      {
+                        transform:
+                          'translateY(0)',
+                      },
+                    ],
+                    {
+                      duration: 760,
+                      easing:
+                        EASE_OUT,
+                    },
+                  )
+                }
+              }
+
+              if (raw < 1) {
+                raf =
+                  requestAnimationFrame(
+                    step,
+                  )
+              } else {
+                res()
+              }
+            }
+
+          raf =
+            requestAnimationFrame(
+              step,
             )
-
-            c.live.style.strokeDashoffset =
-              `${c.len * (1 - f)}`
-          }
-
-          for (let k = 1; k < n - 1; k++) {
-            if (
-              !nodeDone[k] &&
-              p >= nodeAt[k]
-            ) {
-              succeed(k)
-            }
-          }
-
-          for (const g of gates) {
-            if (
-              !g.done &&
-              p >= g.at &&
-              g.inner
-            ) {
-              g.done = true
-
-              play(
-                g.inner,
-                [
-                  {
-                    transform:
-                      'translateY(132%)',
-                  },
-                  {
-                    transform:
-                      'translateY(0)',
-                  },
-                ],
-                {
-                  duration: 760,
-                  easing: EASE_OUT,
-                },
-              )
-            }
-          }
-
-          if (raw < 1) {
-            raf = requestAnimationFrame(step)
-          } else {
-            res()
-          }
-        }
-
-        raf = requestAnimationFrame(step)
-      })
+        },
+      )
 
       if (cancelled) return
 
-      // ---- Product launch complete ----
+      // --------------------------------
+      // Product launched
+      // --------------------------------
+
       play(
         dotCore,
         [
-          { opacity: 1 },
-          { opacity: 0 },
+          {
+            opacity: 1,
+          },
+          {
+            opacity: 0,
+          },
         ],
         {
           duration: 160,
@@ -493,7 +748,9 @@ const gates = wordEls.map((el, k) => ({
 
       succeed(n - 1)
 
-      status.classList.add('is-done')
+      status.classList.add(
+        'is-done',
+      )
 
       const label =
         status.querySelector<HTMLElement>(
@@ -509,23 +766,32 @@ const gates = wordEls.map((el, k) => ({
 
       if (cancelled) return
 
-      // ---- Handoff to homepage ----
+      // --------------------------------
+      // Handoff to homepage
+      // --------------------------------
+
       play(
         canvas,
         [
           {
-            transform: canvasTransform,
+            transform:
+              canvasTransform,
             opacity: 1,
           },
           {
             transform:
-              `translate(${sx}px, ${sy + h + 72 * scale}px) scale(${scale})`,
+              `translate(${sx}px, ${
+                sy +
+                h +
+                72 * scale
+              }px) scale(${scale})`,
             opacity: 0,
           },
         ],
         {
           duration: 420,
-          easing: EASE_OUT,
+          easing:
+            EASE_OUT,
         },
       )
 
@@ -534,7 +800,8 @@ const gates = wordEls.map((el, k) => ({
           title,
           [
             {
-              transform: restTransform,
+              transform:
+                restTransform,
             },
             {
               transform:
@@ -542,25 +809,34 @@ const gates = wordEls.map((el, k) => ({
             },
           ],
           {
-            duration: FLY,
-            easing: EASE_CAMERA,
+            duration:
+              FLY,
+            easing:
+              EASE_CAMERA,
           },
         )
       } else {
         play(
           title,
           [
-            { opacity: 1 },
-            { opacity: 0 },
+            {
+              opacity: 1,
+            },
+            {
+              opacity: 0,
+            },
           ],
           {
             duration: 420,
-            easing: EASE_OUT,
+            easing:
+              EASE_OUT,
           },
         )
       }
 
-      await wait(FLY - 150)
+      await wait(
+        FLY - 150,
+      )
 
       if (cancelled) return
 
@@ -578,15 +854,28 @@ const gates = wordEls.map((el, k) => ({
 
     return () => {
       cancelled = true
-      cancelAnimationFrame(raf)
-      timers.forEach(clearTimeout)
-      anims.forEach((a) => a.cancel())
+
+      cancelAnimationFrame(
+        raf,
+      )
+
+      timers.forEach(
+        clearTimeout,
+      )
+
+      anims.forEach(
+        (animation) =>
+          animation.cancel(),
+      )
+
       release()
       releaseHead()
     }
   }, [])
 
-  if (gone) return null
+  if (gone) {
+    return null
+  }
 
   return (
     <div
@@ -598,16 +887,18 @@ const gates = wordEls.map((el, k) => ({
         className="boot__title"
         ref={titleRef}
       >
-        {WORDS.map((word, i) => (
-          <span
-            className="boot__word"
-            key={`${word}-${i}`}
-          >
-            <span className="boot__word-in">
-              {word}
+        {WORDS.map(
+          (word, index) => (
+            <span
+              className="boot__word"
+              key={`${word}-${index}`}
+            >
+              <span className="boot__word-in">
+                {word}
+              </span>
             </span>
-          </span>
-        ))}
+          ),
+        )}
       </div>
 
       <div
@@ -619,55 +910,59 @@ const gates = wordEls.map((el, k) => ({
           ref={svgRef}
         />
 
-        {STEPS.map((s) => (
-          <span
-            key={s.label}
-            className={
-              `boot__n${
-                s.trigger
-                  ? ' boot__n--trigger'
-                  : ''
-              }`
-            }
-          >
-            <span className="boot__n-card">
-              <svg
-                viewBox="0 0 24 24"
-                width="18"
-                height="18"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d={s.d} />
-              </svg>
-
-              <span className="boot__n-check">
+        {STEPS.map(
+          (step) => (
+            <span
+              key={step.label}
+              className={
+                `boot__n${
+                  step.trigger
+                    ? ' boot__n--trigger'
+                    : ''
+                }`
+              }
+            >
+              <span className="boot__n-card">
                 <svg
                   viewBox="0 0 24 24"
-                  width="9"
-                  height="9"
+                  width="18"
+                  height="18"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="3.2"
+                  strokeWidth="1.8"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
-                  <path d="M5 12l5 5l9 -10" />
+                  <path
+                    d={step.d}
+                  />
                 </svg>
+
+                <span className="boot__n-check">
+                  <svg
+                    viewBox="0 0 24 24"
+                    width="9"
+                    height="9"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M5 12l5 5l9 -10" />
+                  </svg>
+                </span>
+
+                <i className="boot__n-port boot__n-port--in" />
+                <i className="boot__n-port boot__n-port--out" />
               </span>
 
-              <i className="boot__n-port boot__n-port--in" />
-              <i className="boot__n-port boot__n-port--out" />
+              <span className="boot__n-label">
+                {step.label}
+              </span>
             </span>
-
-            <span className="boot__n-label">
-              {s.label}
-            </span>
-          </span>
-        ))}
+          ),
+        )}
 
         <i
           className="boot__dot"
