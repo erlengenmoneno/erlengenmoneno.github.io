@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import { SealCheck } from '@/components/slab'
 import ThemeGlyph from './ThemeGlyph'
 import {
@@ -14,15 +14,8 @@ import {
 import { getTheme, toggleTheme, type Theme } from '@/lib/theme'
 import { profile } from '@/data/profile'
 
-/**
- * Main desktop profile rail / sidebar.
- *
- * Navigation routes are kept compatible with the
- * existing project while the portfolio is being customized.
- */
 export const RAIL_LINKS = [
   { label: 'Home', to: '/', Icon: HomeIcon },
-  { label: 'Design Library', to: '/projects', Icon: FolderIcon },
   { label: 'Services', to: '/services', Icon: StackIcon },
   { label: 'Store', to: '/showcase', Icon: CupIcon },
   { label: 'Testimonials', to: '/testimonials', Icon: StarIcon },
@@ -30,10 +23,43 @@ export const RAIL_LINKS = [
   { label: 'Contact', to: '/contact', Icon: MessageIcon },
 ] as const
 
+const DESIGN_LIBRARY_LINKS = [
+  {
+    label: 'Design Collection',
+    to: '/projects',
+  },
+  {
+    label: 'Video Editing',
+    to: '/projects',
+  },
+  {
+    label: "Children's Book & Coloring Book",
+    to: '/projects',
+  },
+  {
+    label: 'Writing',
+    to: '/projects',
+  },
+] as const
+
 export default function Rail() {
   const [theme, setThemeState] = useState<Theme>('light')
+  const [libraryOpen, setLibraryOpen] = useState(false)
 
-  useEffect(() => setThemeState(getTheme()), [])
+  const location = useLocation()
+
+  useEffect(() => {
+    setThemeState(getTheme())
+  }, [])
+
+  useEffect(() => {
+    if (location.pathname === '/projects') {
+      setLibraryOpen(true)
+    }
+  }, [location.pathname])
+
+  const libraryActive =
+    location.pathname === '/projects'
 
   return (
     <aside
@@ -120,16 +146,97 @@ export default function Rail() {
           aria-label="Sections"
         >
           <ul>
-            {RAIL_LINKS.map(
+            <li>
+              <NavLink
+                to="/"
+                end
+                className="rail__link"
+              >
+                <HomeIcon size={21} />
+                Home
+              </NavLink>
+            </li>
+
+            <li className="rail__library">
+              <button
+                type="button"
+                className={
+                  `rail__link rail__library-button${
+                    libraryActive
+                      ? ' active'
+                      : ''
+                  }`
+                }
+                onClick={() =>
+                  setLibraryOpen(
+                    (open) => !open,
+                  )
+                }
+                aria-expanded={libraryOpen}
+                aria-controls="design-library-menu"
+              >
+                <FolderIcon size={21} />
+
+                <span className="rail__library-label">
+                  Design Library
+                </span>
+
+                <span
+                  className={
+                    `rail__library-chevron${
+                      libraryOpen
+                        ? ' is-open'
+                        : ''
+                    }`
+                  }
+                  aria-hidden="true"
+                >
+                  ▾
+                </span>
+              </button>
+
+              <div
+                id="design-library-menu"
+                className={
+                  `rail__submenu${
+                    libraryOpen
+                      ? ' is-open'
+                      : ''
+                  }`
+                }
+              >
+                <ul>
+                  {DESIGN_LIBRARY_LINKS.map(
+                    ({ label, to }) => (
+                      <li key={label}>
+                        <NavLink
+                          to={to}
+                          className="rail__sublink"
+                        >
+                          <span
+                            className="rail__subdot"
+                            aria-hidden="true"
+                          />
+
+                          <span>
+                            {label}
+                          </span>
+                        </NavLink>
+                      </li>
+                    ),
+                  )}
+                </ul>
+              </div>
+            </li>
+
+            {RAIL_LINKS.slice(1).map(
               ({ label, to, Icon }) => (
                 <li key={to}>
                   <NavLink
                     to={to}
-                    end={to === '/'}
                     className="rail__link"
                   >
                     <Icon size={21} />
-
                     {label}
                   </NavLink>
                 </li>
