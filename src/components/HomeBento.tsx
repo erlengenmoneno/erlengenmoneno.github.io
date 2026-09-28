@@ -10,7 +10,6 @@ import {
   PenNib,
   Palette,
   Storefront,
-  Sparkle,
   Camera,
 } from '@/components/slab'
 
@@ -114,6 +113,39 @@ const SERVICES = [
   {
     label: 'Creative Writing',
     Icon: PenNib,
+  },
+] as const
+
+const STORES = [
+  {
+    name: 'Ko-fi',
+    category: 'Digital Products',
+    logo: '/icons/kofi.svg',
+    href: 'https://ko-fi.com/timeplate/shop',
+  },
+  {
+    name: 'TeePublic',
+    category: 'Apparel & Merch',
+    logo: '/icons/teepublic.svg',
+    href: 'https://www.teepublic.com/user/timeplate',
+  },
+  {
+    name: 'Gumroad',
+    category: 'Digital Products',
+    logo: '/icons/gumroad.svg',
+    href: 'https://timeplate.gumroad.com/',
+  },
+  {
+    name: 'Amazon KDP',
+    category: 'Books & Publishing',
+    logo: '/icons/amazon-kdp.svg',
+    href: 'https://www.amazon.com/s/ref=dp_byline_sr_ebooks_1?ie=UTF8&field-author=Erlengen+Mone%C3%B1o&text=Erlengen+Mone%C3%B1o&sort=relevancerank&search-alias=digital-text',
+  },
+  {
+    name: 'YouTube',
+    category: 'Videos & Creative Content',
+    logo: '/icons/youtube.svg',
+    href: 'https://youtube.com/@netherlenstudio?si=OYDRLj5fjxP12sq_',
   },
 ] as const
 
@@ -250,46 +282,61 @@ export default function HomeBento() {
       </Link>
 
       {/* STORE */}
-      <Link
-        to="/showcase"
-        className="bento__card bento__card--store"
-      >
+      <section className="bento__card bento__card--store">
         <CardHead
           Icon={Storefront}
           title="Store"
-          desc="Discover my products and creative releases."
+          desc="Where to find my work."
+          showArrow={false}
         />
 
-        <div
-          className="bento__media bento__store"
-          aria-hidden="true"
-        >
-          <span className="bento__store-orbit bento__store-orbit--outer" />
+        <div className="bento__store-grid">
+          {STORES.map(
+            ({
+              name,
+              category,
+              logo,
+              href,
+            }) => (
+              <a
+                key={name}
+                className="bento__store-card"
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Visit ${name}`}
+              >
+                <span className="bento__store-logo">
+                  <img
+                    src={logo}
+                    alt=""
+                    aria-hidden="true"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </span>
 
-          <span className="bento__store-orbit bento__store-orbit--inner" />
+                <span className="bento__store-copy">
+                  <strong>
+                    {name}
+                  </strong>
 
-          <span className="bento__store-main">
-            <Storefront
-              size={48}
-              weight="duotone"
-            />
-          </span>
+                  <span>
+                    {category}
+                  </span>
+                </span>
 
-          <span className="bento__store-spark bento__store-spark--one">
-            <Sparkle
-              size={18}
-              weight="fill"
-            />
-          </span>
-
-          <span className="bento__store-spark bento__store-spark--two">
-            <Sparkle
-              size={12}
-              weight="fill"
-            />
-          </span>
+                <ArrowUpRight
+                  size={14}
+                  weight="bold"
+                  aria-hidden="true"
+                  className="bento__store-arrow"
+                />
+              </a>
+            ),
+          )}
         </div>
-      </Link>
+      </section>
     </nav>
   )
 }
