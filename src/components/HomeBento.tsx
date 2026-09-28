@@ -11,11 +11,12 @@ import {
   Palette,
   Storefront,
   Sparkle,
-  type Icon,
+  Monitor,
+  Camera,
 } from '@/components/slab'
 
 type CardHeadProps = {
-  Icon: Icon
+  Icon: typeof FolderOpen
   title: string
   desc: string
   showArrow?: boolean
@@ -90,13 +91,38 @@ const LIBRARY_ITEMS = [
   },
 ] as const
 
+const SERVICES = [
+  {
+    label: 'POD Graphic Design',
+    Icon: Palette,
+  },
+  {
+    label: 'Product Mockups',
+    Icon: Storefront,
+  },
+  {
+    label: 'Photo & Video Editing',
+    Icon: Camera,
+  },
+  {
+    label: "Children's Books",
+    Icon: BookOpen,
+  },
+  {
+    label: 'Creative Writing',
+    Icon: PenNib,
+  },
+] as const
+
 export default function HomeBento() {
   return (
     <nav
       className="bento"
       aria-label="Explore the portfolio"
     >
-      {/* DESIGN LIBRARY */}
+      {/* ======================================
+          DESIGN LIBRARY
+          ====================================== */}
       <section className="bento__card bento__card--library">
         <CardHead
           Icon={FolderOpen}
@@ -132,8 +158,13 @@ export default function HomeBento() {
                 </span>
 
                 <span className="bento__showcase-copy">
-                  <strong>{title}</strong>
-                  <span>{description}</span>
+                  <strong>
+                    {title}
+                  </strong>
+
+                  <span>
+                    {description}
+                  </span>
                 </span>
 
                 <ArrowUpRight
@@ -148,7 +179,9 @@ export default function HomeBento() {
         </div>
       </section>
 
-      {/* ABOUT ME */}
+      {/* ======================================
+          ABOUT ME
+          ====================================== */}
       <Link
         to="/about"
         className="bento__card bento__card--about"
@@ -173,7 +206,9 @@ export default function HomeBento() {
         </div>
       </Link>
 
-      {/* SERVICES */}
+      {/* ======================================
+          SERVICES
+          ====================================== */}
       <Link
         to="/services"
         className="bento__card bento__card--services"
@@ -181,40 +216,42 @@ export default function HomeBento() {
         <CardHead
           Icon={Stack}
           title="Services"
-          desc="Creative support for digital products and marketplaces."
+          desc="What I Design & Create."
         />
 
         <div
-          className="bento__media bento__services"
+          className="bento__services-list"
           aria-hidden="true"
         >
-          <span className="bento__service-item">
-            <Palette
-              size={22}
-              weight="duotone"
-            />
-            <span>Design</span>
-          </span>
+          {SERVICES.map(
+            ({ label, Icon }, index) => (
+              <span
+                className="bento__service-row"
+                key={label}
+              >
+                <span className="bento__service-row-icon">
+                  <Icon
+                    size={13}
+                    weight="duotone"
+                  />
+                </span>
 
-          <span className="bento__service-item">
-            <Image
-              size={22}
-              weight="duotone"
-            />
-            <span>Creative</span>
-          </span>
+                <strong className="bento__service-row-label">
+                  {label}
+                </strong>
 
-          <span className="bento__service-item">
-            <Storefront
-              size={22}
-              weight="duotone"
-            />
-            <span>Marketplace</span>
-          </span>
+                <span className="bento__service-row-number">
+                  {String(index + 1).padStart(2, '0')}
+                </span>
+              </span>
+            ),
+          )}
         </div>
       </Link>
 
-      {/* STORE */}
+      {/* ======================================
+          STORE
+          ====================================== */}
       <Link
         to="/showcase"
         className="bento__card bento__card--store"
