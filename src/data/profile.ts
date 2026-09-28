@@ -2,9 +2,7 @@
  * YOUR IDENTITY - start here.
  *
  * Everything that says who you are lives in this file: name, handle, photo,
- * socials, email and the Home headline. Every value below is a PLACEHOLDER.
- * Replace the text, or hand this file to your AI assistant and tell it what
- * to put in each field.
+ * socials, email and the Home headline.
  *
  * Page-specific copy (projects, services, testimonials, FAQs) lives in the
  * other files in src/data/ and at the top of each view component.
@@ -19,7 +17,11 @@ export type SocialLink = {
 }
 
 /** A proof fact on the phone's Home: a glyph, a short value, a caption. */
-export type Stat = { value: string; label: string; Icon: Icon }
+export type Stat = {
+  value: string
+  label: string
+  Icon: Icon
+}
 
 export type Profile = {
   name: string
@@ -36,7 +38,10 @@ export type Profile = {
   location: string
   /** Three short proof facts shown on phones under the Home lede. */
   stats: Stat[]
-  displayName: { line1: string; line2: string }
+  displayName: {
+    line1: string
+    line2: string
+  }
   hero: {
     body: string
     portraitSrc: string
@@ -46,31 +51,69 @@ export type Profile = {
 }
 
 export const profile: Profile = {
-  name: 'Your Name',
-  firstName: 'Your Name',
-  handle: '@yourhandle',
-  role: 'PLACEHOLDER - your title',
+  name: 'Erlengen Moneño',
+
+  firstName: 'Erlengen',
+
+  handle: '@erlengen',
+
+  role: 'Digital Designer',
+
   avatarSrc: '/avatar.svg',
-  verifiedLabel: 'PLACEHOLDER - what the tick means (e.g. a certification)',
+
+  verifiedLabel: 'Digital Designer',
+
   email: 'you@example.com',
-  location: 'PLACEHOLDER - your city or timezone',
+
+  location: 'GMT+8',
+
   // Pick any icon from https://phosphoricons.com and import it above.
   stats: [
-    { value: '0 yrs', label: 'PLACEHOLDER', Icon: Briefcase },
-    { value: '#000', label: 'PLACEHOLDER', Icon: SealCheck },
-    { value: 'GMT+0', label: 'PLACEHOLDER', Icon: Clock },
+    {
+      value: '1,000+',
+      label: 'Designs',
+      Icon: Briefcase,
+    },
+    {
+      value: '4',
+      label: 'Creative Fields',
+      Icon: SealCheck,
+    },
+    {
+      value: 'GMT+8',
+      label: 'Flexible Hours',
+      Icon: Clock,
+    },
   ],
+
   // The intro types this line, then flies it into the Home headline.
   // Keep it short: two halves, 5-8 words total.
-  displayName: { line1: 'Your headline here.', line2: 'Keep it short.' },
-  hero: {
-    body: 'PLACEHOLDER - one line on what you do and who you do it for.',
-    portraitSrc: '/avatar.svg',
-    portraitAlt: 'Portrait placeholder',
+  displayName: {
+    line1: 'One Design.',
+    line2: 'Endless Sales.',
   },
+
+  hero: {
+    body: 'I turn creative ideas into original designs made for print-on-demand and digital marketplaces.',
+    portraitSrc: '/avatar.svg',
+    portraitAlt: 'Erlengen Moneño',
+  },
+
   socials: [
-    { label: 'Facebook profile', href: '#', iconPath: '/icons/facebook.svg' },
-    { label: 'LinkedIn profile', href: '#', iconPath: '/icons/linkedin.svg' },
-    { label: 'Discord profile', href: '#', iconPath: '/icons/discord.svg' },
+    {
+      label: 'Facebook profile',
+      href: 'https://www.facebook.com/erlengenm',
+      iconPath: '/icons/facebook.svg',
+    },
+    {
+      label: 'Instagram profile',
+      href: 'https://www.instagram.com/erlengen',
+      iconPath: '/icons/facebook.svg',
+    },
+    {
+      label: 'Pinterest profile',
+      href: 'https://ph.pinterest.com/TimeplatePH/',
+      iconPath: '/icons/facebook.svg',
+    },
   ],
 }
