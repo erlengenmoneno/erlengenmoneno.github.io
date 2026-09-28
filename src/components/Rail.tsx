@@ -24,22 +24,13 @@ export const RAIL_LINKS = [
 ] as const
 
 const DESIGN_LIBRARY_LINKS = [
-  {
-    label: 'Design Collection',
-    to: '/projects',
-  },
-  {
-    label: 'Video Editing',
-    to: '/projects',
-  },
+  { label: 'Design Collection', to: '/projects' },
+  { label: 'Video Editing', to: '/projects' },
   {
     label: "Children's Book & Coloring Book",
     to: '/projects',
   },
-  {
-    label: 'Writing',
-    to: '/projects',
-  },
+  { label: 'Writing', to: '/projects' },
 ] as const
 
 export default function Rail() {
@@ -106,13 +97,13 @@ export default function Rail() {
                     rel="noopener noreferrer"
                     aria-label={label}
                   >
-                    <span
+                    <img
                       className="rail__social-icon"
-                      style={{
-                        ['--icon-url' as string]:
-                          `url('${iconPath}')`,
-                      }}
+                      src={iconPath}
+                      alt=""
                       aria-hidden="true"
+                      width={20}
+                      height={20}
                     />
                   </a>
                 </li>
