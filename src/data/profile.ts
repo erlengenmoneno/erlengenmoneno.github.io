@@ -59,11 +59,11 @@ export const profile: Profile = {
 
   role: 'Digital Designer',
 
-  avatarSrc: '/avatar.svg',
+  avatarSrc: '/profile.png',
 
   verifiedLabel: 'Digital Designer',
 
-  email: 'you@example.com',
+  email: 'egnmoneno@gmail.com.com',
 
   location: 'GMT+8',
 
