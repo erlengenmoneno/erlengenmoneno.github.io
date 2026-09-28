@@ -62,28 +62,32 @@ function CardHead({
 const LIBRARY_ITEMS = [
   {
     title: 'Design Collection',
-    description: 'Original designs and creative collections.',
+    description:
+      'Original designs and creative collections.',
     Icon: Image,
     to: '/projects',
     className: 'design',
   },
   {
     title: 'Video Editing',
-    description: 'Creative video projects and visual edits.',
+    description:
+      'Creative video projects and visual edits.',
     Icon: Video,
     to: '/projects',
     className: 'video',
   },
   {
     title: "Children's Book & Coloring Book",
-    description: 'Books, illustrations, and coloring projects.',
+    description:
+      'Books, illustrations, and coloring projects.',
     Icon: BookOpen,
     to: '/projects',
     className: 'books',
   },
   {
     title: 'Writing',
-    description: 'Stories, written works, and creative ideas.',
+    description:
+      'Stories, written works, and creative ideas.',
     Icon: PenNib,
     to: '/projects',
     className: 'writing',
@@ -155,8 +159,13 @@ export default function HomeBento() {
                 </span>
 
                 <span className="bento__showcase-copy">
-                  <strong>{title}</strong>
-                  <span>{description}</span>
+                  <strong>
+                    {title}
+                  </strong>
+
+                  <span>
+                    {description}
+                  </span>
                 </span>
 
                 <ArrowUpRight
@@ -208,28 +217,31 @@ export default function HomeBento() {
         />
 
         <div
-          className="bento__services-list"
+          className="bento__offers"
           aria-hidden="true"
         >
           {SERVICES.map(
             ({ label, Icon }, index) => (
               <span
-                className="bento__service-row"
+                className="bento__offer"
                 key={label}
               >
-                <span className="bento__service-row-icon">
+                <span className="bento__offer-icon">
                   <Icon
                     size={13}
                     weight="duotone"
                   />
                 </span>
 
-                <strong className="bento__service-row-label">
+                <strong className="bento__offer-label">
                   {label}
                 </strong>
 
-                <span className="bento__service-row-number">
-                  {String(index + 1).padStart(2, '0')}
+                <span className="bento__offer-number">
+                  {String(index + 1).padStart(
+                    2,
+                    '0',
+                  )}
                 </span>
               </span>
             ),
