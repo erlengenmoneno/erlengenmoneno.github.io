@@ -11,7 +11,6 @@ import {
   Palette,
   Storefront,
   Sparkle,
-  Monitor,
   Camera,
 } from '@/components/slab'
 
@@ -120,9 +119,7 @@ export default function HomeBento() {
       className="bento"
       aria-label="Explore the portfolio"
     >
-      {/* ======================================
-          DESIGN LIBRARY
-          ====================================== */}
+      {/* DESIGN LIBRARY */}
       <section className="bento__card bento__card--library">
         <CardHead
           Icon={FolderOpen}
@@ -158,13 +155,8 @@ export default function HomeBento() {
                 </span>
 
                 <span className="bento__showcase-copy">
-                  <strong>
-                    {title}
-                  </strong>
-
-                  <span>
-                    {description}
-                  </span>
+                  <strong>{title}</strong>
+                  <span>{description}</span>
                 </span>
 
                 <ArrowUpRight
@@ -179,9 +171,7 @@ export default function HomeBento() {
         </div>
       </section>
 
-      {/* ======================================
-          ABOUT ME
-          ====================================== */}
+      {/* ABOUT ME */}
       <Link
         to="/about"
         className="bento__card bento__card--about"
@@ -206,9 +196,7 @@ export default function HomeBento() {
         </div>
       </Link>
 
-      {/* ======================================
-          SERVICES
-          ====================================== */}
+      {/* SERVICES */}
       <Link
         to="/services"
         className="bento__card bento__card--services"
@@ -249,9 +237,7 @@ export default function HomeBento() {
         </div>
       </Link>
 
-      {/* ======================================
-          STORE
-          ====================================== */}
+      {/* STORE */}
       <Link
         to="/showcase"
         className="bento__card bento__card--store"
