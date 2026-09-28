@@ -2,7 +2,9 @@
    PROFILE RAIL - the fixed left column (desktop only)
    Below 1100px it is hidden and NavBar's floating pill is the navigation.
    ============================================ */
-.rail { display: none; }
+.rail {
+  display: none;
+}
 
 @media (min-width: 1100px) {
   .rail {
@@ -74,8 +76,6 @@
     color: var(--navy);
   }
 
-  /* Platform signal, not brand furniture: this one stays Facebook blue in
-     both themes rather than following --orange. */
   .rail__name svg {
     color: var(--verified);
     flex-shrink: 0;
@@ -87,7 +87,6 @@
     color: var(--muted);
   }
 
-  /* live visitor count, the same stat the phone shell shows */
   .rail__visits {
     color: var(--muted);
     font-weight: 500;
@@ -100,8 +99,9 @@
     font-weight: 400;
   }
 
-  /* Round-button row: the three social plates plus the theme switch. One row,
-     one size, so the rail has a single band of controls instead of two. */
+  /* ============================================
+     SOCIALS + THEME
+     ============================================ */
   .rail__actions {
     display: flex;
     align-items: center;
@@ -128,9 +128,6 @@
     box-shadow: inset 0 0 0 1px var(--line-strong);
   }
 
-  /* ---------- Social row ----------
-     Circular plates, the mark tinted by currentColor through a CSS mask so one
-     black silhouette per brand serves both themes. */
   .rail__socials {
     display: flex;
     align-items: center;
@@ -172,6 +169,9 @@
     mask: var(--icon-url) center / contain no-repeat;
   }
 
+  /* ============================================
+     NAVIGATION
+     ============================================ */
   .rail__nav {
     width: 100%;
     margin-top: clamp(20px, 3vh, 32px);
@@ -210,7 +210,6 @@
   /* ============================================
      DESIGN LIBRARY
      ============================================ */
-
   .rail__library {
     width: 100%;
   }
@@ -247,13 +246,21 @@
 
   /* ============================================
      DESIGN LIBRARY SUBMENU
-     ============================================ */
 
+     IMPORTANT:
+     Closed submenu has ZERO vertical padding.
+     This removes the unwanted large gap between
+     Design Library and Services.
+
+     Padding is added only while submenu is open.
+     ============================================ */
   .rail__submenu {
     display: grid;
     grid-template-rows: 0fr;
     opacity: 0;
     visibility: hidden;
+    margin: 0;
+    padding: 0;
     transition:
       grid-template-rows 220ms var(--ease-out),
       opacity 160ms var(--ease-out),
@@ -272,9 +279,14 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding: 4px 0 5px 36px;
+    padding: 0 0 0 36px;
     margin: 0;
     list-style: none;
+  }
+
+  .rail__submenu.is-open > ul {
+    padding-top: 4px;
+    padding-bottom: 5px;
   }
 
   .rail__submenu > ul > li {
@@ -282,6 +294,14 @@
     padding: 0;
   }
 
+  /* 4 Design Library sections:
+     Design Collection
+     Video Editing
+     Children's Book & Coloring Book
+     Writing
+
+     Font remains enlarged at 15px.
+     ============================================ */
   .rail__sublink {
     display: flex;
     align-items: flex-start;
@@ -320,14 +340,9 @@
     opacity: 0.9;
   }
 
-  /* ---------- Its Hover icon motion, in CSS ----------
-     Their components drive these with motion/react. The parts carry the same
-     classes here and the hover state drives them instead, so the motion is
-     identical with no runtime.
-
-     `transform-box: fill-box` is load-bearing: without it an SVG child's
-     transform-origin resolves against the whole user-space viewport, not the
-     shape, and every "scale from the centre" lands somewhere else entirely. */
+  /* ============================================
+     ICON MOTION
+     ============================================ */
   .ricon [class^='ricon__'] {
     transform-box: fill-box;
     transform-origin: center;
@@ -406,8 +421,6 @@
     transform: translateY(-1px) scale(1.06);
   }
 
-  /* The bubble draws itself. stroke-dashoffset is not a compositor property,
-     but this is one 18px path and the same technique the old intro used. */
   .ricon__msg {
     stroke-dasharray: 74;
     stroke-dashoffset: 0;
@@ -440,7 +453,6 @@
     }
   }
 
-  /* The active row keeps its icon in the rested state, just accented. */
   .rail__link.active .ricon__star-fill {
     opacity: 1;
     transform: scale(1);
@@ -464,6 +476,9 @@
     opacity: 1;
   }
 
+  /* ============================================
+     COPYRIGHT
+     ============================================ */
   .rail__copy {
     width: 100%;
     margin-top: auto;
@@ -472,13 +487,10 @@
     font-size: 12px;
     line-height: 1.7;
     color: var(--muted);
-    /* left-aligned past the accessibility button that sits in this corner */
     padding-left: 52px;
     text-align: left;
   }
 
-  /* The rail IS the navigation up here, so the floating pill steps aside and
-     the page keeps exactly one navigation surface. */
   .nav {
     display: none;
   }
