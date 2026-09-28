@@ -500,8 +500,6 @@ a.bento__card:hover {
 
 /* ============================================
    ABOUT ME
-   Corrected framing:
-   full head + hair stays visible
    ============================================ */
 
 .bento__card--about {
@@ -534,10 +532,6 @@ a.bento__card:hover {
 
   object-fit: cover;
 
-  /*
-   * Less aggressive crop than before.
-   * Keeps the woman's full head and hair visible.
-   */
   object-position: center 62%;
 
   transform: scale(1);
@@ -557,54 +551,89 @@ a.bento__card:hover {
    SERVICES
    ============================================ */
 
-.bento__services {
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  gap:
-    clamp(5px, 0.55vw, 8px);
+.bento__card--services {
+  isolation: isolate;
 }
 
-.bento__service-item {
+/*
+ * Five compact service rows.
+ * Designed specifically for the smaller
+ * upper-right Services card.
+ */
+
+.bento__services-list {
   display: flex;
   flex-direction: column;
 
-  align-items: center;
   justify-content: center;
 
-  gap: 5px;
+  flex: 1 1 auto;
 
-  flex: 1 1 0;
+  min-height: 0;
+
+  margin-top:
+    clamp(6px, 0.7vh, 9px);
+}
+
+.bento__service-row {
+  display: grid;
+
+  grid-template-columns:
+    22px minmax(0, 1fr) auto;
+
+  align-items: center;
+
+  gap: 7px;
 
   min-width: 0;
 
-  height:
-    clamp(58px, 7vh, 78px);
+  padding:
+    clamp(4px, 0.45vh, 6px)
+    2px;
 
-  padding: 6px 4px;
+  border-bottom: 1px solid var(--line);
 
-  border: 1px solid var(--line);
+  transition:
+    padding-left var(--dur-med) var(--ease-spring),
+    background var(--dur-fast) var(--ease-out);
+}
 
-  border-radius: 11px;
+.bento__service-row:first-child {
+  border-top: 1px solid var(--line);
+}
 
-  background: var(--white);
+.bento__service-row-icon {
+  display: grid;
+  place-items: center;
+
+  width: 22px;
+  height: 22px;
+
+  border-radius: 7px;
+
+  background:
+    color-mix(
+      in srgb,
+      var(--orange) 11%,
+      var(--paper)
+    );
 
   color: var(--orange);
 
   transition:
     transform var(--dur-med) var(--ease-spring),
-    border-color var(--dur-fast) var(--ease-out);
+    background var(--dur-fast) var(--ease-out);
 }
 
-.bento__service-item span {
-  max-width: 100%;
+.bento__service-row-label {
+  min-width: 0;
 
   overflow: hidden;
 
   font-size:
-    clamp(8.5px, 0.6vw, 10.5px);
+    clamp(9px, 0.62vw, 11px);
+
+  line-height: 1.2;
 
   font-weight: 600;
 
@@ -615,33 +644,65 @@ a.bento__card:hover {
   text-overflow: ellipsis;
 }
 
-.bento__card--services:hover
-.bento__service-item {
-  border-color:
+.bento__service-row-number {
+  font-size:
+    clamp(8px, 0.52vw, 9.5px);
+
+  line-height: 1;
+
+  font-weight: 600;
+
+  color:
     color-mix(
       in srgb,
-      var(--orange) 35%,
-      var(--line)
+      var(--muted) 55%,
+      transparent
     );
 }
 
 .bento__card--services:hover
-.bento__service-item:nth-child(1) {
-  transform:
-    translateY(-3px)
-    rotate(-2deg);
+.bento__service-row {
+  padding-left: 4px;
 }
 
 .bento__card--services:hover
-.bento__service-item:nth-child(2) {
-  transform: translateY(-5px);
+.bento__service-row-icon {
+  background:
+    color-mix(
+      in srgb,
+      var(--orange) 18%,
+      var(--paper)
+    );
 }
 
 .bento__card--services:hover
-.bento__service-item:nth-child(3) {
-  transform:
-    translateY(-3px)
-    rotate(2deg);
+.bento__service-row:nth-child(1)
+.bento__service-row-icon {
+  transform: rotate(-4deg);
+}
+
+.bento__card--services:hover
+.bento__service-row:nth-child(2)
+.bento__service-row-icon {
+  transform: translateY(-1px);
+}
+
+.bento__card--services:hover
+.bento__service-row:nth-child(3)
+.bento__service-row-icon {
+  transform: rotate(4deg);
+}
+
+.bento__card--services:hover
+.bento__service-row:nth-child(4)
+.bento__service-row-icon {
+  transform: translateY(-1px);
+}
+
+.bento__card--services:hover
+.bento__service-row:nth-child(5)
+.bento__service-row-icon {
+  transform: rotate(-4deg);
 }
 
 /* ============================================
@@ -812,6 +873,10 @@ a.bento__card:hover {
   .bento__about-image {
     object-position: center 62%;
   }
+
+  .bento__service-row-label {
+    font-size: 11px;
+  }
 }
 
 /* ============================================
@@ -889,6 +954,36 @@ a.bento__card:hover {
     transform: scale(1.025);
   }
 
+  .bento__card--services {
+    min-height: 310px;
+  }
+
+  .bento__services-list {
+    margin-top: 12px;
+  }
+
+  .bento__service-row {
+    grid-template-columns:
+      30px minmax(0, 1fr) auto;
+
+    gap: 10px;
+
+    padding: 8px 3px;
+  }
+
+  .bento__service-row-icon {
+    width: 28px;
+    height: 28px;
+  }
+
+  .bento__service-row-label {
+    font-size: 12px;
+  }
+
+  .bento__service-row-number {
+    font-size: 10px;
+  }
+
   .bento__card--store {
     min-height: 260px;
   }
@@ -908,19 +1003,6 @@ a.bento__card:hover {
     width: 72px;
     height: 72px;
   }
-
-  .bento__services {
-    gap: 4px;
-  }
-
-  .bento__service-item {
-    padding-left: 3px;
-    padding-right: 3px;
-  }
-
-  .bento__service-item span {
-    font-size: 8px;
-  }
 }
 
 /* ============================================
@@ -936,7 +1018,8 @@ a.bento__card:hover {
   .bento__showcase-glow,
   .bento__showcase-arrow,
   .bento__about-image,
-  .bento__service-item,
+  .bento__service-row,
+  .bento__service-row-icon,
   .bento__store-main,
   .bento__store-orbit,
   .bento__store-spark {
@@ -951,7 +1034,7 @@ a.bento__card:hover {
   .bento__card--about:hover
     .bento__about-image,
   .bento__card--services:hover
-    .bento__service-item,
+    .bento__service-row-icon,
   .bento__card--store:hover
     .bento__store-main,
   .bento__card--store:hover
