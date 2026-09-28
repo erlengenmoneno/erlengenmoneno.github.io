@@ -11,19 +11,22 @@ import {
   Palette,
   Storefront,
   Sparkle,
+  type Icon,
 } from '@/components/slab'
 import { profile } from '@/data/profile'
 
 type CardHeadProps = {
-  Icon: typeof FolderOpen
+  Icon: Icon
   title: string
   desc: string
+  showArrow?: boolean
 }
 
 function CardHead({
   Icon,
   title,
   desc,
+  showArrow = true,
 }: CardHeadProps) {
   return (
     <header className="bento__head">
@@ -45,15 +48,48 @@ function CardHead({
         {desc}
       </p>
 
-      <ArrowUpRight
-        size={16}
-        weight="bold"
-        aria-hidden="true"
-        className="bento__arrow"
-      />
+      {showArrow && (
+        <ArrowUpRight
+          size={15}
+          weight="bold"
+          aria-hidden="true"
+          className="bento__arrow"
+        />
+      )}
     </header>
   )
 }
+
+const LIBRARY_ITEMS = [
+  {
+    title: 'Design Collection',
+    description: 'Original designs and creative collections.',
+    Icon: Image,
+    to: '/projects',
+    className: 'design',
+  },
+  {
+    title: 'Video Editing',
+    description: 'Creative video projects and visual edits.',
+    Icon: Video,
+    to: '/projects',
+    className: 'video',
+  },
+  {
+    title: "Children's Book & Coloring Book",
+    description: 'Books, illustrations, and coloring projects.',
+    Icon: BookOpen,
+    to: '/projects',
+    className: 'books',
+  },
+  {
+    title: 'Writing',
+    description: 'Stories, written works, and creative ideas.',
+    Icon: PenNib,
+    to: '/projects',
+    className: 'writing',
+  },
+] as const
 
 export default function HomeBento() {
   return (
@@ -61,72 +97,70 @@ export default function HomeBento() {
       className="bento"
       aria-label="Explore the portfolio"
     >
-      {/* DESIGN LIBRARY */}
-      <Link
-        to="/projects"
-        className="bento__card bento__card--library"
-      >
+      {/* ======================================
+          DESIGN LIBRARY
+          Large full-height left card
+          ====================================== */}
+      <section className="bento__card bento__card--library">
         <CardHead
           Icon={FolderOpen}
           title="Design Library"
-          desc="Explore my creative work across design, video, books, and writing."
+          desc="Explore my creative work across four creative fields."
+          showArrow={false}
         />
 
-        <div
-          className="bento__media bento__library"
-          aria-hidden="true"
-        >
-          <div className="bento__library-grid">
-            <span className="bento__library-item">
-              <span className="bento__library-icon">
-                <Image
-                  size={19}
-                  weight="duotone"
+        <div className="bento__library-showcase">
+          {LIBRARY_ITEMS.map(
+            ({
+              title,
+              description,
+              Icon,
+              to,
+              className,
+            }) => (
+              <Link
+                key={title}
+                to={to}
+                className={
+                  `bento__showcase-card bento__showcase-card--${className}`
+                }
+              >
+                <span className="bento__showcase-visual">
+                  <span className="bento__showcase-glow" />
+
+                  <Icon
+                    size={42}
+                    weight="duotone"
+                    aria-hidden="true"
+                  />
+                </span>
+
+                <span className="bento__showcase-copy">
+                  <strong>
+                    {title}
+                  </strong>
+
+                  <span>
+                    {description}
+                  </span>
+                </span>
+
+                <ArrowUpRight
+                  size={15}
+                  weight="bold"
+                  aria-hidden="true"
+                  className="bento__showcase-arrow"
                 />
-              </span>
-
-              <span>Design Collection</span>
-            </span>
-
-            <span className="bento__library-item">
-              <span className="bento__library-icon">
-                <Video
-                  size={19}
-                  weight="duotone"
-                />
-              </span>
-
-              <span>Video Editing</span>
-            </span>
-
-            <span className="bento__library-item">
-              <span className="bento__library-icon">
-                <BookOpen
-                  size={19}
-                  weight="duotone"
-                />
-              </span>
-
-              <span>
-                Children's Book &amp; Coloring Book
-              </span>
-            </span>
-
-            <span className="bento__library-item">
-              <span className="bento__library-icon">
-                <PenNib
-                  size={19}
-                  weight="duotone"
-                />
-              </span>
-
-              <span>Writing</span>
-            </span>
-          </div>
+              </Link>
+            ),
+          )}
         </div>
-      </Link>
+      </section>
 
-      {/* ABOUT ME */}
+      {/* ======================================
+          ABOUT ME
+          Upper-right left
+          ====================================== */}
       <Link
         to="/about"
         className="bento__card bento__card--about"
@@ -150,14 +184,66 @@ export default function HomeBento() {
             />
           </span>
 
-          <div className="bento__about-copy">
-            <strong>{profile.name}</strong>
-            <span>{profile.role}</span>
-          </div>
+          <span className="bento__about-copy">
+            <strong>
+              {profile.name}
+            </strong>
+
+            <span>
+              {profile.role}
+            </span>
+          </span>
         </div>
       </Link>
 
-      {/* STORE */}
+      {/* ======================================
+          SERVICES
+          Upper-right right
+          ====================================== */}
+      <Link
+        to="/services"
+        className="bento__card bento__card--services"
+      >
+        <CardHead
+          Icon={Stack}
+          title="Services"
+          desc="Creative support for digital products and marketplaces."
+        />
+
+        <div
+          className="bento__media bento__services"
+          aria-hidden="true"
+        >
+          <span className="bento__service-item">
+            <Palette
+              size={22}
+              weight="duotone"
+            />
+            <span>Design</span>
+          </span>
+
+          <span className="bento__service-item">
+            <Image
+              size={22}
+              weight="duotone"
+            />
+            <span>Creative</span>
+          </span>
+
+          <span className="bento__service-item">
+            <Storefront
+              size={22}
+              weight="duotone"
+            />
+            <span>Marketplace</span>
+          </span>
+        </div>
+      </Link>
+
+      {/* ======================================
+          STORE
+          Wide lower-right card
+          ====================================== */}
       <Link
         to="/showcase"
         className="bento__card bento__card--store"
@@ -172,20 +258,20 @@ export default function HomeBento() {
           className="bento__media bento__store"
           aria-hidden="true"
         >
-          <span className="bento__store-orbit bento__store-orbit--one" />
+          <span className="bento__store-orbit bento__store-orbit--outer" />
 
-          <span className="bento__store-orbit bento__store-orbit--two" />
+          <span className="bento__store-orbit bento__store-orbit--inner" />
 
           <span className="bento__store-main">
             <Storefront
-              size={46}
+              size={48}
               weight="duotone"
             />
           </span>
 
           <span className="bento__store-spark bento__store-spark--one">
             <Sparkle
-              size={17}
+              size={18}
               weight="fill"
             />
           </span>
@@ -195,50 +281,6 @@ export default function HomeBento() {
               size={12}
               weight="fill"
             />
-          </span>
-        </div>
-      </Link>
-
-      {/* SERVICES */}
-      <Link
-        to="/services"
-        className="bento__card bento__card--services"
-      >
-        <CardHead
-          Icon={Stack}
-          title="Services"
-          desc="Creative design support for digital products and marketplaces."
-        />
-
-        <div
-          className="bento__media bento__services"
-          aria-hidden="true"
-        >
-          <span className="bento__service-card bento__service-card--one">
-            <Palette
-              size={21}
-              weight="duotone"
-            />
-
-            <span>Design</span>
-          </span>
-
-          <span className="bento__service-card bento__service-card--two">
-            <Image
-              size={21}
-              weight="duotone"
-            />
-
-            <span>Creative</span>
-          </span>
-
-          <span className="bento__service-card bento__service-card--three">
-            <Storefront
-              size={21}
-              weight="duotone"
-            />
-
-            <span>Marketplace</span>
           </span>
         </div>
       </Link>
