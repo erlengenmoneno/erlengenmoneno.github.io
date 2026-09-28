@@ -13,7 +13,6 @@ import {
   Sparkle,
   type Icon,
 } from '@/components/slab'
-import { profile } from '@/data/profile'
 
 type CardHeadProps = {
   Icon: Icon
@@ -97,10 +96,7 @@ export default function HomeBento() {
       className="bento"
       aria-label="Explore the portfolio"
     >
-      {/* ======================================
-          DESIGN LIBRARY
-          Large full-height left card
-          ====================================== */}
+      {/* DESIGN LIBRARY */}
       <section className="bento__card bento__card--library">
         <CardHead
           Icon={FolderOpen}
@@ -136,13 +132,8 @@ export default function HomeBento() {
                 </span>
 
                 <span className="bento__showcase-copy">
-                  <strong>
-                    {title}
-                  </strong>
-
-                  <span>
-                    {description}
-                  </span>
+                  <strong>{title}</strong>
+                  <span>{description}</span>
                 </span>
 
                 <ArrowUpRight
@@ -157,10 +148,7 @@ export default function HomeBento() {
         </div>
       </section>
 
-      {/* ======================================
-          ABOUT ME
-          Upper-right left
-          ====================================== */}
+      {/* ABOUT ME */}
       <Link
         to="/about"
         className="bento__card bento__card--about"
@@ -168,38 +156,24 @@ export default function HomeBento() {
         <CardHead
           Icon={User}
           title="About Me"
-          desc="Get to know the designer behind the work."
+          desc="Who I am and how I work."
         />
 
         <div
           className="bento__media bento__about"
           aria-hidden="true"
         >
-          <span className="bento__portrait-ring">
-            <img
-              src={profile.avatarSrc}
-              alt=""
-              loading="lazy"
-              decoding="async"
-            />
-          </span>
-
-          <span className="bento__about-copy">
-            <strong>
-              {profile.name}
-            </strong>
-
-            <span>
-              {profile.role}
-            </span>
-          </span>
+          <img
+            className="bento__about-image"
+            src="/about-me.png"
+            alt=""
+            loading="lazy"
+            decoding="async"
+          />
         </div>
       </Link>
 
-      {/* ======================================
-          SERVICES
-          Upper-right right
-          ====================================== */}
+      {/* SERVICES */}
       <Link
         to="/services"
         className="bento__card bento__card--services"
@@ -240,10 +214,7 @@ export default function HomeBento() {
         </div>
       </Link>
 
-      {/* ======================================
-          STORE
-          Wide lower-right card
-          ====================================== */}
+      {/* STORE */}
       <Link
         to="/showcase"
         className="bento__card bento__card--store"
