@@ -4,7 +4,6 @@ import {
   FolderOpen,
   User,
   Stack,
-  Cup,
   Image,
   Video,
   BookOpen,
@@ -62,9 +61,7 @@ export default function HomeBento() {
       className="bento"
       aria-label="Explore the portfolio"
     >
-      {/* =========================================
-          DESIGN LIBRARY
-          ========================================= */}
+      {/* DESIGN LIBRARY */}
       <Link
         to="/projects"
         className="bento__card bento__card--library"
@@ -129,9 +126,7 @@ export default function HomeBento() {
         </div>
       </Link>
 
-      {/* =========================================
-          ABOUT ME
-          ========================================= */}
+      {/* ABOUT ME */}
       <Link
         to="/about"
         className="bento__card bento__card--about"
@@ -162,15 +157,13 @@ export default function HomeBento() {
         </div>
       </Link>
 
-      {/* =========================================
-          STORE
-          ========================================= */}
+      {/* STORE */}
       <Link
         to="/showcase"
         className="bento__card bento__card--store"
       >
         <CardHead
-          Icon={Cup}
+          Icon={Storefront}
           title="Store"
           desc="Discover my products and creative releases."
         />
@@ -206,9 +199,7 @@ export default function HomeBento() {
         </div>
       </Link>
 
-      {/* =========================================
-          SERVICES
-          ========================================= */}
+      {/* SERVICES */}
       <Link
         to="/services"
         className="bento__card bento__card--services"
