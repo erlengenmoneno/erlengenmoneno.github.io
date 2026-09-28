@@ -1,7 +1,7 @@
 /* ============================================
-   PROFILE RAIL - the fixed left column (desktop only)
-   Below 1100px it is hidden and NavBar's floating pill is the navigation.
+   PROFILE RAIL
    ============================================ */
+
 .rail {
   display: none;
 }
@@ -32,9 +32,8 @@
 
   /* ============================================
      PROFILE PHOTO
-     Clean circular portrait.
-     No glow, blur, smoke, fade, mask or shadow.
      ============================================ */
+
   .rail__avatar {
     position: relative;
     display: block;
@@ -102,6 +101,7 @@
   /* ============================================
      SOCIALS + THEME
      ============================================ */
+
   .rail__actions {
     display: flex;
     align-items: center;
@@ -125,7 +125,8 @@
 
   .rail__theme:hover {
     transform: translateY(-2px);
-    box-shadow: inset 0 0 0 1px var(--line-strong);
+    box-shadow:
+      inset 0 0 0 1px var(--line-strong);
   }
 
   .rail__socials {
@@ -145,33 +146,36 @@
     color: var(--navy);
     box-shadow:
       inset 0 0 0 1px var(--line),
-      0 10px 24px -18px rgba(6, 12, 26, 0.55);
+      0 10px 24px -18px
+        rgba(6, 12, 26, 0.55);
     transition:
       transform var(--dur-med) var(--ease-spring),
-      color var(--dur-fast) var(--ease-out),
       box-shadow var(--dur-fast) var(--ease-out);
   }
 
   .rail__social:hover {
     transform: translateY(-2px);
-    color: var(--orange);
     box-shadow:
       inset 0 0 0 1px var(--line-strong),
-      0 14px 28px -18px rgba(6, 12, 26, 0.6);
+      0 14px 28px -18px
+        rgba(6, 12, 26, 0.6);
   }
 
+  /*
+   * Social logos are real SVG images.
+   * No CSS mask is used here.
+   */
   .rail__social-icon {
     display: block;
     width: 20px;
     height: 20px;
-    background: currentColor;
-    -webkit-mask: var(--icon-url) center / contain no-repeat;
-    mask: var(--icon-url) center / contain no-repeat;
+    object-fit: contain;
   }
 
   /* ============================================
      NAVIGATION
      ============================================ */
+
   .rail__nav {
     width: 100%;
     margin-top: clamp(20px, 3vh, 32px);
@@ -210,6 +214,7 @@
   /* ============================================
      DESIGN LIBRARY
      ============================================ */
+
   .rail__library {
     width: 100%;
   }
@@ -237,7 +242,8 @@
     line-height: 1;
     transform: rotate(-90deg);
     transform-origin: center;
-    transition: transform var(--dur-fast) var(--ease-out);
+    transition:
+      transform var(--dur-fast) var(--ease-out);
   }
 
   .rail__library-chevron.is-open {
@@ -246,14 +252,8 @@
 
   /* ============================================
      DESIGN LIBRARY SUBMENU
-
-     IMPORTANT:
-     Closed submenu has ZERO vertical padding.
-     This removes the unwanted large gap between
-     Design Library and Services.
-
-     Padding is added only while submenu is open.
      ============================================ */
+
   .rail__submenu {
     display: grid;
     grid-template-rows: 0fr;
@@ -294,14 +294,6 @@
     padding: 0;
   }
 
-  /* 4 Design Library sections:
-     Design Collection
-     Video Editing
-     Children's Book & Coloring Book
-     Writing
-
-     Font remains enlarged at 15px.
-     ============================================ */
   .rail__sublink {
     display: flex;
     align-items: flex-start;
@@ -343,6 +335,7 @@
   /* ============================================
      ICON MOTION
      ============================================ */
+
   .ricon [class^='ricon__'] {
     transform-box: fill-box;
     transform-origin: center;
@@ -357,11 +350,15 @@
   }
 
   .ricon__whole {
-    transition: transform 300ms var(--ease-spring);
+    transition:
+      transform 300ms var(--ease-spring);
   }
 
   .rail__link:hover .ricon__whole {
-    transform: translateY(-1.5px) rotate(-6deg) scale(1.08);
+    transform:
+      translateY(-1.5px)
+      rotate(-6deg)
+      scale(1.08);
   }
 
   .rail__link:hover .ricon__roof {
@@ -378,11 +375,15 @@
   }
 
   .rail__link:hover .ricon__folder {
-    transform: translateY(-1.5px) scale(1.05);
+    transform:
+      translateY(-1.5px)
+      scale(1.05);
   }
 
   .rail__link:hover .ricon__layer-top {
-    transform: translateY(-2px) scale(1.06);
+    transform:
+      translateY(-2px)
+      scale(1.06);
   }
 
   .rail__link:hover .ricon__layer-bottom {
@@ -401,7 +402,9 @@
   }
 
   .rail__link:hover .ricon__star-line {
-    transform: scale(1.08) rotate(-6deg);
+    transform:
+      scale(1.08)
+      rotate(-6deg);
   }
 
   .ricon__steam {
@@ -418,7 +421,9 @@
   }
 
   .rail__link:hover .ricon__user {
-    transform: translateY(-1px) scale(1.06);
+    transform:
+      translateY(-1px)
+      scale(1.06);
   }
 
   .ricon__msg {
@@ -430,7 +435,8 @@
   }
 
   .rail__link:hover .ricon__msg {
-    animation: ricon-draw 700ms var(--ease-out);
+    animation:
+      ricon-draw 700ms var(--ease-out);
   }
 
   @keyframes ricon-draw {
@@ -468,7 +474,8 @@
     color: var(--navy);
     font-weight: 600;
     background: var(--white);
-    box-shadow: inset 0 0 0 1px var(--line);
+    box-shadow:
+      inset 0 0 0 1px var(--line);
   }
 
   .rail__link.active svg {
@@ -479,6 +486,7 @@
   /* ============================================
      COPYRIGHT
      ============================================ */
+
   .rail__copy {
     width: 100%;
     margin-top: auto;
