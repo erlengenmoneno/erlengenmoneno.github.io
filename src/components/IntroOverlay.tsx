@@ -260,19 +260,19 @@ export default function IntroOverlay() {
       const space = probe.getBoundingClientRect().width / scale
       probe.remove()
 
-      const inked =
-        wordEls.reduce(
-          (sum, el) => sum + el.getBoundingClientRect().width,
-          0,
-        ) / scale
+const inked =
+  wordEls.reduce(
+    (sum, el) => sum + el.getBoundingClientRect().width,
+    0,
+  ) / scale
 
 title.style.columnGap = `${space}px`
 
-      const gates = wordEls.map((el, k) => ({
-        inner: el.querySelector<HTMLElement>('.boot__word-in'),
-        at: k / wordEls.length,
-        done: false,
-      }))
+const gates = wordEls.map((el, k) => ({
+  inner: el.querySelector<HTMLElement>('.boot__word-in'),
+  at: k / wordEls.length,
+  done: false,
+}))
 
       // ---- Ignition ----
       nodeEls.forEach((el, k) => {
